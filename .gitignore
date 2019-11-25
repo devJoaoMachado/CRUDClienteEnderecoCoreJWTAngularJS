@@ -3,3 +3,10 @@
 ################################################################################
 
 /CRUDClienteEndereco/.vs/CRUDClienteEndereco/v15/Server/sqlite3
+/CRUDClienteEndereco/CRUDClienteEndereco/bin/Debug/netcoreapp2.1
+/CRUDClienteEndereco/CRUDClienteEndereco/obj/Debug/netcoreapp2.1
+/CRUDClienteEndereco/CRUDClienteEndereco/obj
+/CRUDClienteEndereco/CRUDClienteEndereco.Dominio/bin/Debug/netcoreapp2.1
+/CRUDClienteEndereco/CRUDClienteEndereco.Dominio/obj
+/CRUDClienteEndereco/CRUDClienteEndereco.Infra/bin/Debug/netcoreapp2.1
+/CRUDClienteEndereco/CRUDClienteEndereco.Infra/obj
