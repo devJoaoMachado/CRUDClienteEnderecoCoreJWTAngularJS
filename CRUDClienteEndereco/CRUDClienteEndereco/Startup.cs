@@ -1,10 +1,13 @@
-﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
+﻿using FluentNHibernate.Cfg;
+using FluentNHibernate.Cfg.Db;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
+using NHibernate.Tool.hbm2ddl;
 using System.Text;
 
 namespace CRUDClienteEndereco
@@ -18,7 +21,6 @@ namespace CRUDClienteEndereco
 
         public IConfiguration Configuration { get; }
 
-        // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
@@ -26,19 +28,37 @@ namespace CRUDClienteEndereco
                 {
                     options.TokenValidationParameters = new TokenValidationParameters
                     {
-                        ValidateIssuer =  true,
+                        ValidateIssuer = true,
                         ValidateAudience = true,
-                        ValidateLifetime =  true,
+                        ValidateLifetime = true,
                         ValidateIssuerSigningKey = true,
                         ValidIssuer = "ApiSegura",
                         ValidAudience = "ApiSegura",
-                        IssuerSigningKey =  new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["SecurityKey"]))
+                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["SecurityKey"]))
                     };
                 }
                 );
 
+            var oracleConfig = OracleClientConfiguration.Oracle10.ConnectionString(c =>
+                                c.Is(Configuration["ConnectionString"]));
+
+            var _sessionFactory = Fluently.Configure()
+                                      .Database(oracleConfig)
+                                      .Mappings(m => m.FluentMappings.AddFromAssembly(GetType().Assembly))
+                                      .ExposeConfiguration(BuildSchema).BuildSessionFactory();
+
+            services.AddScoped(factory =>
+            {
+                return _sessionFactory.OpenSession();
+            });
+
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
 
+        }
+        private static void BuildSchema(NHibernate.Cfg.Configuration config)
+        {
+            new SchemaExport(config)
+              .Create(false, true);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
