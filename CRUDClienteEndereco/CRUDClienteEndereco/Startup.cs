@@ -1,10 +1,18 @@
-﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
+﻿using CRUDClienteEndereco.Configuration;
+using CRUDClienteEndereco.Infra.Mapping;
+using CRUDClienteEndereco.Services;
+using CRUDClienteEndereco.Services.Interfaces;
+using FluentNHibernate.Cfg;
+using FluentNHibernate.Cfg.Db;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
+using NHibernate.Driver;
+using NHibernate.Tool.hbm2ddl;
 using System.Text;
 
 namespace CRUDClienteEndereco
@@ -21,24 +29,51 @@ namespace CRUDClienteEndereco
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+
+            var tokenSettings = new TokenSettings();
+            Configuration.GetSection("TokenSettings").Bind(tokenSettings);
+
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 .AddJwtBearer(options =>
                 {
                     options.TokenValidationParameters = new TokenValidationParameters
                     {
-                        ValidateIssuer =  true,
+                        ValidateIssuer = true,
                         ValidateAudience = true,
-                        ValidateLifetime =  true,
+                        ValidateLifetime = true,
                         ValidateIssuerSigningKey = true,
-                        ValidIssuer = "ApiSegura",
-                        ValidAudience = "ApiSegura",
-                        IssuerSigningKey =  new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["SecurityKey"]))
+                        ValidIssuer = tokenSettings.Issuer,
+                        ValidAudience = tokenSettings.Audience,
+                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(tokenSettings.SecurityKey))
                     };
                 }
                 );
 
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
+            var oracleConfig = OracleClientConfiguration.Oracle10.ConnectionString(c =>
+                                c.Is(Configuration["ConnectionString"])).Driver<OracleManagedDataClientDriver>();
+            
+            var _sessionFactory = Fluently.Configure()
+                                      .Database(oracleConfig)
+                                      .Mappings(m => m.FluentMappings.AddFromAssemblyOf<ClienteMap>())
+                                      .ExposeConfiguration(BuildSchema).BuildSessionFactory();
 
+            services.AddScoped(factory =>
+            {
+                return _sessionFactory.OpenSession();
+            });
+
+            services.AddScoped<IUsuarioService, UsuarioService>();
+            services.AddScoped<IClienteService, ClienteService>();
+
+            services.AddSingleton(tokenSettings);
+
+            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
+        }
+
+        private static void BuildSchema(NHibernate.Cfg.Configuration config)
+        {
+            new SchemaExport(config)
+              .Create(false, false);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -54,7 +89,16 @@ namespace CRUDClienteEndereco
             }
 
             app.UseHttpsRedirection();
-            app.UseMvc();
+            app.UseAuthentication();
+
+            app.UseMvc(routes =>
+            {
+                routes.MapRoute(
+                    name: "default",
+                    template: "api/{controller}/{action}");
+            });
+
+
         }
     }
 }

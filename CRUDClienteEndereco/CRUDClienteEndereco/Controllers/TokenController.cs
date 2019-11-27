@@ -1,7 +1,8 @@
-﻿using CRUDClienteEndereco.Models;
+﻿using CRUDClienteEndereco.Configuration;
+using CRUDClienteEndereco.Models;
+using CRUDClienteEndereco.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using System;
 using System.IdentityModel.Tokens.Jwt;
@@ -10,38 +11,42 @@ using System.Text;
 
 namespace CRUDClienteEndereco.Controllers
 {
-    [Route("api/[controller]")]
     [ApiController]
+    [Route("api/token")]
     public class TokenController : ControllerBase
     {
-        private readonly IConfiguration _configuration;
+        private readonly TokenSettings _tokenSettings;
+        private readonly IUsuarioService _usuarioService;
 
-        public TokenController(IConfiguration configuration)
+        public TokenController(TokenSettings tokenSettings, IUsuarioService usuarioService)
         {
-            _configuration = configuration;
+            _tokenSettings = tokenSettings;
+            _usuarioService = usuarioService;
         }
 
         [AllowAnonymous]
         [HttpPost]
+        [Route("request")]
         public IActionResult RequestToken(Usuario usuario)
         {
-            if (usuario.Login == "teste" && usuario.Senha == "crud")
+            if (_usuarioService.UsuarioValido(usuario, out var role))
             {
                 var claims = new[]
                 {
-                    new Claim(ClaimTypes.Name, usuario.Login)
+                    new Claim(ClaimTypes.Name, usuario.Login),
+                    new Claim(ClaimTypes.Role, role)
                 };
 
                 var securityKey =
-                    new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["SecurityKey"]));
+                    new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_tokenSettings.SecurityKey));
                 var credentials =
-                    new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha512);
+                    new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
                 var securityToken =
                     new JwtSecurityToken(
-                        issuer: "ApiSegura",
-                        audience: "ApiSegura",
+                        issuer: _tokenSettings.Issuer,
+                        audience: _tokenSettings.Audience,
                         claims: claims,
-                        expires: DateTime.Now.AddMinutes(60),
+                        expires: DateTime.Now.AddMinutes(30),
                         signingCredentials: credentials
                     );
 
@@ -55,7 +60,5 @@ namespace CRUDClienteEndereco.Controllers
                 return BadRequest("Credenciais inválidas.");
             }
         }
-
-
     }
 }
