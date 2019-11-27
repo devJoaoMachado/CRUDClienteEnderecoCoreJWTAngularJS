@@ -1,0 +1,17 @@
+{
+  "name": "crudclienteendereco",
+  "version": "1.0.0",
+  "description": "\"Projeto CRUD de teste\"",
+  "main": "gulpfile.js",
+  "dependencies": {
+    "gulp": "^4.0.2",
+    "gulp-minify": "^3.1.0",
+    "gulp-uglify": "^3.0.2"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "test"
+  },
+  "author": "",
+  "license": "GPL"
+}
