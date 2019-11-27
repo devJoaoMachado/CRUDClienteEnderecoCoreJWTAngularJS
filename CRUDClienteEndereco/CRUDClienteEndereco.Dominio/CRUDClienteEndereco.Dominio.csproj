@@ -6,6 +6,7 @@
 
   <ItemGroup>
     <Folder Include="Contratos\" />
+    <Folder Include="Servicos\" />
   </ItemGroup>
 
 </Project>
