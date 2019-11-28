@@ -1,6 +1,9 @@
 ﻿using CRUDClienteEndereco.Services.Interfaces;
+using CRUDClienteEndereco.ViewModel;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System;
+using System.Linq;
 
 namespace CRUDClienteEndereco.Controllers
 {
@@ -19,18 +22,30 @@ namespace CRUDClienteEndereco.Controllers
 
         [HttpPost]
         [Route("inserir")]
-        public IActionResult Inserir()
+        public IActionResult Inserir(ClienteViewModel clienteViewModel)
         {
-            return Ok();
+            if (ModelState.IsValid)
+            {
+                return Ok();
+            }
+            else
+            {
+                //retornar erros
+                return BadRequest();
+            }
+
+            
         }
 
         [HttpPost]
-        [Route("obter")]
-        public IActionResult Obter()
+        [Route("obterTodos")]
+        public IActionResult ObterTodos(int pagina =1, int quantidadeRegistros =10)
         {
-            return Ok(new {
-                cliente = _clienteService.ObterCliente(1)
-            });
+            var result = _clienteService.ObterClientes(pagina, quantidadeRegistros, out var totalPaginas);
+           
+            HttpContext.Response.Headers.Add("X-Pages-TotalPages", totalPaginas.ToString());
+
+            return Ok(result);
         }
 
         [HttpPost]
