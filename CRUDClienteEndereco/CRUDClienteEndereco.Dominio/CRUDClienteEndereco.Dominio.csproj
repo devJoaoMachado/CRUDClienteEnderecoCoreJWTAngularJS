@@ -4,9 +4,4 @@
     <TargetFramework>netcoreapp2.1</TargetFramework>
   </PropertyGroup>
 
-  <ItemGroup>
-    <Folder Include="Contratos\" />
-    <Folder Include="Servicos\" />
-  </ItemGroup>
-
 </Project>

@@ -3,11 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.28307.489
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CRUDClienteEndereco", "CRUDClienteEndereco\CRUDClienteEndereco.csproj", "{74CB5935-B447-4770-AFDC-2ABB1D37BCAD}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CRUDClienteEndereco.Dominio", "CRUDClienteEndereco.Dominio\CRUDClienteEndereco.Dominio.csproj", "{A880EEC4-268D-452B-B784-F2CEC42B8305}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CRUDClienteEndereco.Dominio", "CRUDClienteEndereco.Dominio\CRUDClienteEndereco.Dominio.csproj", "{A880EEC4-268D-452B-B784-F2CEC42B8305}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CRUDClienteEndereco.Infra", "CRUDClienteEndereco.Infra\CRUDClienteEndereco.Infra.csproj", "{678725C0-C88B-4FF8-B1C1-E252EC6C0676}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CRUDClienteEndereco.Infra", "CRUDClienteEndereco.Infra\CRUDClienteEndereco.Infra.csproj", "{678725C0-C88B-4FF8-B1C1-E252EC6C0676}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CRUDClienteEndereco.Web", "CRUDClienteEndereco.Web\CRUDClienteEndereco.Web.csproj", "{1B49C27D-8A61-4461-B413-202706230348}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,10 +15,6 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{74CB5935-B447-4770-AFDC-2ABB1D37BCAD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{74CB5935-B447-4770-AFDC-2ABB1D37BCAD}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{74CB5935-B447-4770-AFDC-2ABB1D37BCAD}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{74CB5935-B447-4770-AFDC-2ABB1D37BCAD}.Release|Any CPU.Build.0 = Release|Any CPU
 		{A880EEC4-268D-452B-B784-F2CEC42B8305}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{A880EEC4-268D-452B-B784-F2CEC42B8305}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A880EEC4-268D-452B-B784-F2CEC42B8305}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -27,6 +23,10 @@ Global
 		{678725C0-C88B-4FF8-B1C1-E252EC6C0676}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{678725C0-C88B-4FF8-B1C1-E252EC6C0676}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{678725C0-C88B-4FF8-B1C1-E252EC6C0676}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1B49C27D-8A61-4461-B413-202706230348}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1B49C27D-8A61-4461-B413-202706230348}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1B49C27D-8A61-4461-B413-202706230348}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1B49C27D-8A61-4461-B413-202706230348}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

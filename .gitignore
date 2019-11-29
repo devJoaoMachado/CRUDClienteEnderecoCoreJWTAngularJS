@@ -12,3 +12,8 @@
 /CRUDClienteEndereco/CRUDClienteEndereco.Infra/obj
 /CRUDClienteEndereco/.vs/config/applicationhost.config
 /CRUDClienteEndereco/.vs/CRUDClienteEndereco/DesignTimeBuild/.dtbcache
+/CRUDClienteEndereco/CRUDClienteEndereco/node_modules
+/CRUDClienteEndereco/CRUDClienteEndereco.Web/bin
+/CRUDClienteEndereco/CRUDClienteEndereco.Web/node_modules
+/CRUDClienteEndereco/CRUDClienteEndereco.Web/obj
+/CRUDClienteEndereco/.vs/NetCoreSPA

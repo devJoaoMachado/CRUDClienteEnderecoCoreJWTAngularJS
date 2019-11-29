@@ -1,0 +1,33 @@
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-sm-4">
+            <h3>Clientes</h3>
+        <span class="warning">{{resmessage}}</span>
+        </div>
+        <div class="col-sm-8">
+            <table style="width:100%" class="table table-striped">
+                <tr>
+                    <th>Id</th>
+                    <th>Nome</th>
+                    <th>Documento</th>
+                    <th>Endereco</th>
+                    <th>Editar/Excluir</th>
+                </tr>
+                <tr ng-repeat="item in clienteList">
+                    <td>{{ item.id }}</td>
+                    <td>{{ item.nome }}</td>
+                    <td>{{ item.documento }}</td>
+                    <td>{{ item.logradouro + ', ' + item.bairro + ', ' + item.numero + ', ' + item.complemento}}</td>
+                    <td>
+                        <a href="#" ng-click="" title="Edit Record" class="btn btn-primary btn-xs pull-right">
+                            Edit
+                        </a>
+                        <a href="#" ng-click="" title="Delete Record" class="btn btn-danger btn-xs pull-right">
+                            Delete
+                        </a>
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </div>
+</div>

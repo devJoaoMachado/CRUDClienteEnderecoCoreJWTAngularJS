@@ -14,7 +14,7 @@ namespace CRUDClienteEndereco.Infra.Mapping
             Map(t => t.Bairro);
             Map(t => t.UF);
             Map(t => t.Cep);
-            References(t => t.Cliente);
+            Map(t => t.ClienteId).Column("CLIENTE_ID");
             Table("ENDERECO");
 
         }
