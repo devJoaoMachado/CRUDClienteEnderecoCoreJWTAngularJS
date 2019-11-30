@@ -18,9 +18,20 @@ namespace CRUDClienteEndereco.Web.Services
 
         public void DeletarCliente(long clientId)
         {
-            _session.CreateQuery("DELETE from cliente where cliente_id = :id")
-                    .SetParameter("id", clientId)
-                    .ExecuteUpdate();
+            using (var transaction = _session.BeginTransaction())
+            {
+                var queryStringEnd = string.Format("DELETE from {0} where cliente_id = :id", typeof(Endereco));
+                _session.CreateQuery(queryStringEnd)
+                       .SetParameter("id", clientId)
+                       .ExecuteUpdate();
+
+                var queryStringCli = string.Format("DELETE from {0} where cliente_id = :id", typeof(Cliente));
+                _session.CreateQuery(queryStringCli)
+                       .SetParameter("id", clientId)
+                       .ExecuteUpdate();
+
+                transaction.Commit();
+            }
         }
 
         public void InserirCliente(Cliente cliente)

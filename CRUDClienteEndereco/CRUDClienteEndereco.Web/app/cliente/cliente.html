@@ -65,10 +65,7 @@
                     <td>{{ item.documento }}</td>
                     <td>{{ item.logradouro + ', ' + item.bairro + ', ' + item.numero + ', ' + item.complemento}}</td>
                     <td>
-                        <a href="#" ng-click="" title="Edit Record" class="btn btn-primary btn-xs pull-right">
-                            Editar
-                        </a>
-                        <a href="#" ng-click="deletar({{item}})" title="Deletar linha" class="btn btn-danger btn-xs pull-right">
+                        <a href="#" ng-click="deletar(item.id)" title="Deletar linha" class="btn btn-danger btn-xs pull-right">
                             Excluir
                         </a>
                     </td>

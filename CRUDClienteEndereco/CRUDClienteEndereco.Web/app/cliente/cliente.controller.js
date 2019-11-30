@@ -26,24 +26,30 @@ templatingApp.controller('ClienteController', ['$scope', '$http', function ($sco
             url: '/api/cliente/Inserir/',
             data: $scope.clientModel
         }).then(function (response) {
-            if (response.status == 200)
-                alert('Cliente incluído com sucesso!');
+            if (response.status == 200) {
+                alert('Cliente incluido com sucesso!');
+                obterTodos();
+            }
+
         }, function (error) {
             if (error.status == 401)
                 window.location.href = '../';
         });
     };
 
-    function deletar(clienteModel) {
+    $scope.deletar = function(id) {
         $http({
             method: 'DELETE',
-            url: '/api/cliente/deletar?clienteId=' + clienteModel.id, 
+            url: '/api/cliente/deletar?clienteId=' + id, 
         }).then(function (response) {
-            if (response.status == 204)
-                alert('Cliente excluído com sucesso!');
-        }, function (error) {
-            if (error.status == 401)
-                alert('Ops! Você não tem permissão para realizar essa operação.');
+            if (response.status == 204) {
+                alert('Cliente excluido com sucesso!');
+                obterTodos();
+            }
+                
+            }, function (error) {
+                if (error.status == 401 || error.status == 403)
+                alert('Ops! Voce nao tem permissao para realizar essa operacao.');
         });
     };
 
