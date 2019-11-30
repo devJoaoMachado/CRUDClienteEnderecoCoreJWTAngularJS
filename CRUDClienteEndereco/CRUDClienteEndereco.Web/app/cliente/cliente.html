@@ -22,7 +22,7 @@
                 </div>
                 <div class="form-group">
                     <label for="Logradouro"> Logradouro:</label>
-                    <input type="text" ng-model="clientModel.Logradouro" class="form-control" id="logradouro" required>
+                    <input type="text" ng-model="clientModel.Logradouro" class="form-control" id="logradouro" required maxlength="100">
                 </div>
                 <div class="form-group">
                     <label for="Numero"> Numero:</label>
@@ -30,20 +30,20 @@
                 </div>
                 <div class="form-group">
                     <label for="Complemento"> Complemento:</label>
-                    <input type="text" ng-model="clientModel.Complemento" class="form-control" id="complemento">
+                    <input type="text" ng-model="clientModel.Complemento" class="form-control" id="complemento" maxlength="50">
                 </div>
                 <div class="form-group">
                     <label for="Bairro"> Bairro:</label>
-                    <input type="text" ng-model="clientModel.Bairro" class="form-control" id="bairro" required>
+                    <input type="text" ng-model="clientModel.Bairro" class="form-control" id="bairro" required  maxlength="50">
                 </div>
                 <div class="form-group">
                     <label for="UF"> UF:</label>
-                    <input type="text" ng-model="clientModel.UF" class="form-control" id="uf">
+                    <input type="text" ng-model="clientModel.UF" class="form-control" id="uf" maxlength="2">
                 </div>
 
                 <div class="form-group">
                     <label for="CEP"> CEP:</label>
-                    <input type="text" ng-model="clientModel.Cep" class="form-control" id="cep">
+                    <input type="text" ng-model="clientModel.Cep" class="form-control" id="cep" maxlength="9">
                 </div>
 
                 <button type="submit" class="btn btn-default">Inserir</button>

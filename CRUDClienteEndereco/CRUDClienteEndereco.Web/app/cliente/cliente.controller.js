@@ -28,7 +28,8 @@ templatingApp.controller('ClienteController', ['$scope', '$http', function ($sco
         }).then(function (response) {
             if (response.status == 200) {
                 alert('Cliente incluido com sucesso!');
-                obterTodos();
+                $scope.clientModel = null;
+                window.location.href = '/cliente';
             }
 
         }, function (error) {
