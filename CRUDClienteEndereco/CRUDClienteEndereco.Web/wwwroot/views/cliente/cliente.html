@@ -2,7 +2,53 @@
     <div class="row">
         <div class="col-sm-4">
             <h3>Clientes</h3>
-        <span class="warning">{{resmessage}}</span>
+            <span class="warning">{{resmessage}}</span>
+
+            <form ng-submit="inserir()" ng-controller="ClienteController">
+                <div class="form-group">
+                    <label for="Nome"> Nome:</label>
+                    <input type="text" ng-model="clientModel.Nome" class="form-control" id="nome" required>
+                </div>
+                <div class="form-group">
+                    <label for="TipoDocumento"> Tipo Documento:</label>
+                    <select ng-model="clientModel.TipoDocumento" class="form-control" required>
+                        <option value="1">CPF</option>
+                        <option value="2">CNPJ</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="Documento"> Documento:</label>
+                    <input type="text" ng-model="clientModel.Documento" class="form-control" id="documento" required>
+                </div>
+                <div class="form-group">
+                    <label for="Logradouro"> Logradouro:</label>
+                    <input type="text" ng-model="clientModel.Logradouro" class="form-control" id="logradouro" required>
+                </div>
+                <div class="form-group">
+                    <label for="Numero"> Numero:</label>
+                    <input type="text" ng-model="clientModel.Numero" class="form-control" id="numero" required>
+                </div>
+                <div class="form-group">
+                    <label for="Complemento"> Complemento:</label>
+                    <input type="text" ng-model="clientModel.Complemento" class="form-control" id="complemento">
+                </div>
+                <div class="form-group">
+                    <label for="Bairro"> Bairro:</label>
+                    <input type="text" ng-model="clientModel.Bairro" class="form-control" id="bairro" required>
+                </div>
+                <div class="form-group">
+                    <label for="UF"> UF:</label>
+                    <input type="text" ng-model="clientModel.UF" class="form-control" id="uf">
+                </div>
+
+                <div class="form-group">
+                    <label for="CEP"> CEP:</label>
+                    <input type="text" ng-model="clientModel.Cep" class="form-control" id="cep">
+                </div>
+
+                <button type="submit" class="btn btn-default">Inserir</button>
+            </form>
+
         </div>
         <div class="col-sm-8">
             <table style="width:100%" class="table table-striped">
@@ -20,10 +66,10 @@
                     <td>{{ item.logradouro + ', ' + item.bairro + ', ' + item.numero + ', ' + item.complemento}}</td>
                     <td>
                         <a href="#" ng-click="" title="Edit Record" class="btn btn-primary btn-xs pull-right">
-                            Edit
+                            Editar
                         </a>
-                        <a href="#" ng-click="" title="Delete Record" class="btn btn-danger btn-xs pull-right">
-                            Delete
+                        <a href="#" ng-click="deletar({{item}})" title="Deletar linha" class="btn btn-danger btn-xs pull-right">
+                            Excluir
                         </a>
                     </td>
                 </tr>

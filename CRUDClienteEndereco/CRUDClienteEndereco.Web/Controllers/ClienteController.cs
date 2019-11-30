@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using CRUDClienteEndereco.Dominio.Contratos;
+using CRUDClienteEndereco.Dominio.Entidades;
 using CRUDClienteEndereco.Web.Extensions;
 using CRUDClienteEndereco.Web.ViewModel;
 using Microsoft.AspNetCore.Authorization;
@@ -24,18 +25,21 @@ namespace CRUDClienteEndereco.Web.Controllers
 
         [HttpPost]
         [Route("inserir")]
-        public IActionResult Inserir(ClienteViewModel clienteViewModel)
+        public IActionResult Inserir([FromBody] ClienteViewModel clienteViewModel)
         {
-            if (ModelState.IsValid)
+            return this.ExecuteAction(HttpContext, () =>
             {
-                return Ok();
-            }
-            else
-            {
-                return BadRequest(ModelState.Values);
-            }
-
-
+                if (ModelState.IsValid)
+                {
+                    var cliente = _mapper.Map<Cliente>(clienteViewModel);
+                    _clienteDomainService.InserirCliente(cliente);
+                    return Ok();
+                }
+                else
+                {
+                    return BadRequest(ModelState.Values);
+                }
+            });
         }
 
         [HttpGet]
@@ -74,14 +78,14 @@ namespace CRUDClienteEndereco.Web.Controllers
         }
 
 
-        [HttpPost]
-        [Route("deletar/{clientId}")]
+        [HttpDelete]
+        [Route("deletar")]
         [Authorize(Roles = "admin")]
-        public IActionResult deletar(long clientId)
+        public IActionResult deletar([FromQuery(Name = "clienteId")]  long clienteId)
         {
             return this.ExecuteAction(HttpContext, () =>
             {
-                _clienteDomainService.DeletarCliente(clientId);
+                _clienteDomainService.DeletarCliente(clienteId);
                 return NoContent();
             });
 

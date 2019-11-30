@@ -23,6 +23,21 @@ namespace CRUDClienteEndereco.Web.Services
                     .ExecuteUpdate();
         }
 
+        public void InserirCliente(Cliente cliente)
+        {
+            using (var transaction = _session.BeginTransaction())
+            {
+                _session.Save(cliente);
+                foreach (var endereco in cliente.Enderecos)
+                {
+                    endereco.ClienteId = cliente.ClienteId;
+                    _session.Save(endereco);
+                }
+
+                transaction.Commit();
+            }
+        }
+
         public Cliente ObterCliente(long clientId)
         {
             var cliente = _session.Query<Cliente>().Where(c => c.ClienteId == clientId).FirstOrDefault();

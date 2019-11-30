@@ -17,6 +17,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using NHibernate.Driver;
 using NHibernate.Tool.hbm2ddl;
+using System.Collections.Generic;
 using System.IO;
 using System.Text;
 
@@ -54,35 +55,9 @@ namespace NetCoreSPA.Web
                 }
                 );
 
-            var oracleConfig = OracleClientConfiguration.Oracle10.ConnectionString(c =>
-                                c.Is(Configuration["ConnectionString"])).Driver<OracleManagedDataClientDriver>();
+            FluentNhibernateConfiguration(services);
 
-            var _sessionFactory = Fluently.Configure()
-                                      .Database(oracleConfig)
-                                      .Mappings(m => m.FluentMappings.AddFromAssemblyOf<ClienteMap>())
-                                      .ExposeConfiguration(BuildSchema).BuildSessionFactory();
-
-            services.AddScoped(factory =>
-            {
-                return _sessionFactory.OpenSession();
-            });
-
-            var config = new MapperConfiguration(cfg =>
-            {
-                cfg.CreateMap<Cliente, ClienteViewModel>()
-                .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.ClienteId))
-                .ForMember(dest => dest.TipoDocumento, opt => opt.MapFrom(src => src.TipoDocumento.TipoDocumentoId))
-                .ForMember(dest => dest.Logradouro, opt => opt.MapFrom(src => src.Enderecos.Count == 0 ? string.Empty : src.Enderecos[0].Logradouro))
-                .ForMember(dest => dest.Numero, opt => opt.MapFrom(src => src.Enderecos.Count == 0 ? 0 : src.Enderecos[0].Numero))
-                .ForMember(dest => dest.Bairro, opt => opt.MapFrom(src => src.Enderecos.Count == 0 ? string.Empty : src.Enderecos[0].Bairro))
-                .ForMember(dest => dest.Complemento, opt => opt.MapFrom(src => src.Enderecos.Count == 0 ? string.Empty : src.Enderecos[0].Complemento))
-                .ForMember(dest => dest.Cep, opt => opt.MapFrom(src => src.Enderecos.Count == 0 ? string.Empty : src.Enderecos[0].Cep))
-                .ForMember(dest => dest.UF, opt => opt.MapFrom(src => src.Enderecos.Count == 0 ? string.Empty : src.Enderecos[0].UF));
-
-            });
-
-            IMapper mapper = config.CreateMapper();
-            services.AddSingleton(mapper);
+            AutoMapperMap(services);
 
             services.AddScoped<IUsuarioApplicationService, UsuarioApplicationService>();
             services.AddScoped<IClienteApplicationService, ClienteApplicationService>();
@@ -99,6 +74,55 @@ namespace NetCoreSPA.Web
             }));
         }
 
+        private void FluentNhibernateConfiguration(IServiceCollection services)
+        {
+            var oracleConfig = OracleClientConfiguration.Oracle10.ConnectionString(c =>
+                                            c.Is(Configuration["ConnectionString"])).Driver<OracleManagedDataClientDriver>();
+
+            var _sessionFactory = Fluently.Configure()
+                                      .Database(oracleConfig)
+                                      .Mappings(m => m.FluentMappings.AddFromAssemblyOf<ClienteMap>())
+                                      .ExposeConfiguration(BuildSchema).BuildSessionFactory();
+
+            services.AddScoped(factory =>
+            {
+                return _sessionFactory.OpenSession();
+            });
+        }
+
+        private static void AutoMapperMap(IServiceCollection services)
+        {
+            var config = new MapperConfiguration(cfg =>
+            {
+                cfg.CreateMap<Cliente, ClienteViewModel>()
+                .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.ClienteId))
+                .ForMember(dest => dest.TipoDocumento, opt => opt.MapFrom(src => src.TipoDocumento.TipoDocumentoId))
+                .ForMember(dest => dest.Logradouro, opt => opt.MapFrom(src => src.Enderecos.Count == 0 ? string.Empty : src.Enderecos[0].Logradouro))
+                .ForMember(dest => dest.Numero, opt => opt.MapFrom(src => src.Enderecos.Count == 0 ? 0 : src.Enderecos[0].Numero))
+                .ForMember(dest => dest.Bairro, opt => opt.MapFrom(src => src.Enderecos.Count == 0 ? string.Empty : src.Enderecos[0].Bairro))
+                .ForMember(dest => dest.Complemento, opt => opt.MapFrom(src => src.Enderecos.Count == 0 ? string.Empty : src.Enderecos[0].Complemento))
+                .ForMember(dest => dest.Cep, opt => opt.MapFrom(src => src.Enderecos.Count == 0 ? string.Empty : src.Enderecos[0].Cep))
+                .ForMember(dest => dest.UF, opt => opt.MapFrom(src => src.Enderecos.Count == 0 ? string.Empty : src.Enderecos[0].UF));
+
+                cfg.CreateMap<ClienteViewModel, Cliente>()
+                .ForMember(dest => dest.ClienteId, opt => opt.MapFrom(src => src.Id))
+                .ForMember(dest => dest.TipoDocumento, opt => opt.MapFrom(src => new TipoDocumento { TipoDocumentoId = src.TipoDocumento }))
+                .ForMember(dest => dest.Enderecos, opt => opt.MapFrom(src => new List<Endereco>() { new Endereco {
+                                                                                                        Logradouro = src.Logradouro,
+                                                                                                        Bairro = src.Bairro,
+                                                                                                        Numero = src.Numero,
+                                                                                                        Complemento = src.Complemento,
+                                                                                                        UF = src.UF,
+                                                                                                        Cep = src.Cep,
+                                                                                                        ClienteId = src.Id
+                                                                                                    }}));
+
+            });
+
+            IMapper mapper = config.CreateMapper();
+            services.AddSingleton(mapper);
+        }
+
         private static void BuildSchema(NHibernate.Cfg.Configuration config)
         {
             new SchemaExport(config)
@@ -113,14 +137,14 @@ namespace NetCoreSPA.Web
                 app.UseBrowserLink();
                 app.UseDeveloperExceptionPage();
             }
-    
+
             app.UseAuthentication();
 
             // Middleware to Handle Client Side Routes
             app.Use(async (context, next) =>
             {
                 await next();
-                if (context.Response.StatusCode == 404 && !Path.HasExtension(context.Request.Path.Value) 
+                if (context.Response.StatusCode == 404 && !Path.HasExtension(context.Request.Path.Value)
                     && !context.Request.Path.Value.Contains("/api"))
                 {
                     context.Request.Path = "/index.html";

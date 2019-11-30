@@ -20,6 +20,11 @@ namespace CRUDClienteEndereco.Dominio.Servicos
                 _clienteService.DeletarCliente(clienteId);
         }
 
+        public void InserirCliente(Cliente cliente)
+        {
+            _clienteService.InserirCliente(cliente);
+        }
+
         public Cliente ObterClientePorId(long clienteId)
         {
             if (clienteId == 0)

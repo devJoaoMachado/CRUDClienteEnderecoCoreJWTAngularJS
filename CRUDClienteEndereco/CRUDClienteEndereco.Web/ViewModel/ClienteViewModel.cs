@@ -17,8 +17,10 @@ namespace CRUDClienteEndereco.Web.ViewModel
 
         [Required(ErrorMessage = "O campo logradouro é obrigatório")]
         public string Logradouro { get; set; }
+
         [Required(ErrorMessage = "O campo número é obrigatório, s/n deve ser informado 0.")]
         public int Numero { get; set; }
+
         public string Complemento { get; set; }
 
         [Required(ErrorMessage = "O campo bairro é obrigatório.")]
